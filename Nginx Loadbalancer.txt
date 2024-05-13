@@ -1,0 +1,33 @@
+step 1 
+create 2 instance and host 2 website
+step 2 
+create another ubuntu ec2 and install nginx
+#sudo apt install nginx -y 
+#cd /etc/nginx/conf.d/
+#sudo vim load-balancer.conf
+
+-----------------------------------------------------------------
+upstream backend_servers {
+    server 192.168.1.101;
+    server 192.168.1.102;
+}
+
+server {
+    listen 9999;
+
+    location / {
+        proxy_pass http://backend_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+----------------------------------------------------------
+
+#sudo nginx -t
+#sudo systemctl reload nginx
+
+NOW ACCESS THE INTERNET USING <NAGIOSIP/9999>
+
